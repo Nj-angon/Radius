@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="forwarding_letter_template">
+        <div class="row">
+            <div class="col-12">
+                <span>Date:
+                    <span t-esc="o.date_order" t-options='{"widget": "date"}'/>
+                </span>
+                <br/>
+                <span>To,</span>
+                <br/>
+                <span t-if="o.contact_person_id" t-esc="'The %s'%(o.contact_person_id.function)"/>
+                <br/>
+                <span t-field="o.partner_id"/>
+                <br/>
+                <span>
+                    <t t-set="customer_address_params"
+                       t-value="[o.partner_id.street, o.partner_id.city, o.partner_id.state_id.name, o.partner_id.zip, o.partner_id.country_id.name]"/>
+                    <span t-if="customer_address_params"
+                          t-esc="', '.join([cap for cap in customer_address_params if cap])"/>
+                </span>
+                <br/>
+                <p class="mt-4">
+                    <strong>Sub:</strong>
+                    <span t-if="o.subject" t-field="o.subject"/>
+                </p>
+                <p class="mb-4">
+                    <strong>Ref: QUOTE:</strong>
+                    <span t-field="o.name"/>
+                </p>
+                <span>Dear Sir,</span>
+                <br/>
+                <p>
+                    We would like to introduce ourselves as a business concern that, Radius
+                    Engineering
+                    established in 2013 &amp; started its business with a promising goal to fulfill
+                    and
+                    satisfy the ultimate need of customers in the power and communication arena of
+                    Bangladesh. Amongst the mid ranked Fire Safety companies /dealer in Bangladesh,
+                    Radius Engineering and its associates is operating dominantly in the
+                    high-technology
+                    core sectors of the economy, such as Firefighting and safety security arena.
+                    This
+                    company also responsible for preparation of fire consultancy, products selection
+                    and
+                    system designing, installation, testing and commissioning of various turn- key
+                    projects related to above.Radius Engineering is strongly market driven company
+                    with
+                    a high customer orientation. This trends are accentuated by a wide spread
+                    marketing
+                    and service network across the country. Radius Engineering has put its
+                    nationwide
+                    experience and technological expertise in the areas of specific technical
+                    requirement of our customers around the country.
+                </p>
+                <p>
+                    Having extensive technical know how gained through years of experience, Radius
+                    Engineering are strongly capable to offering a constant stream of optimum new
+                    solution tailored to our current technical requirement. Over the years, we have
+                    built up a vast store of specialist / expertise, which provides a springboard
+                    for
+                    further product development, allowing us to anticipate and fulfill our
+                    customer’s
+                    specific needs.
+                </p>
+                <br/>
+                <span style="margin-top: 30mm;">Thanking you with best regards</span>
+                <br/>
+                <span>
+                    <strong>
+                        <span t-esc="user.name"/>
+                    </strong>
+                </span>
+                <br/>
+                <t t-if="user.function">
+                    <span t-esc="user.function"/>
+                    <br/>
+                </t>
+                <span>
+                    <strong>
+                        <span t-esc="company.name"/>
+                    </strong>
+                </span>
+                <br/>
+                <span>
+                    <u>Cell:
+                        <span t-if="company.phone" t-esc="company.phone"/>
+                    </u>
+                </span>
+                <br/>
+                <span>
+                    <u>Email:
+                        <span t-if="company.email" t-esc="company.email"/>
+                    </u>
+                </span>
+                <br/>
+                <span>
+                    <u>Web:
+                        <span t-if="company.website" t-esc="company.website"/>
+                    </u>
+                </span>
+            </div>
+        </div>
+    </template>
+    <template id="terms_and_conditions_template">
+        <div class="row">
+            <div class="col-12">
+                <table>
+                    <tr>
+                        <td class="text-center">
+                            <b>
+                                <u>COMMERCIAL TERMS AND CONDITIONS:</u>
+                            </b>
+                        </td>
+                    </tr>
+                    <t t-set="sl_no" t-value="0"/>
+                    <tr t-foreach="o.terms_and_conditions" t-as="tc">
+                        <t t-set="sl_no" t-value="sl_no+1"/>
+                        <td>
+                            <h5 t-esc="'%d. %s'%(sl_no, tc.name)"/>
+                            <span t-if="tc.description" t-raw="tc.description"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </template>
+    <template id="boq_summary_template">
+        <div t-foreach="o.quotation_ids" t-as="quotation" class="row mb-3">
+            <t t-set="quotation_currency" t-value=""/>
+            <t t-if="quotation.pricelist_id">
+                <t t-set="quotation_currency" t-value="quotation.pricelist_id.currency_id"/>
+            </t>
+            <t t-set="sections"
+               t-value="[qol for qol in quotation.order_line if qol.display_type=='line_section']"/>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <div class="col-12 text-center">
+                                <h3>
+                                    <u>Summary of
+                                        <span t-if="o.project_id" t-field="o.project_id"/>
+                                        <t t-if="quotation.quotation_type">(
+
+                                            <span t-field="quotation.quotation_type"/>
+                                            )
+                                        </t>
+                                    </u>
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Sl.</th>
+                                            <th class="text-center">Work Description</th>
+                                            <th class="text-center">Unit</th>
+                                            <th class="text-center">Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-if="sections">
+                                            <t t-set="next_section" t-value=""/>
+                                            <t t-set="section_idx" t-value="0"/>
+                                            <t t-set="section_no" t-value="0"/>
+                                            <t t-set="sl_no" t-value="0"/>
+                                            <t t-foreach="sections" t-as="section">
+                                                <t t-if="section_idx &lt; len(sections)-1"
+                                                   t-set="next_section"
+                                                   t-value="sections[section_idx + 1]"/>
+                                                <t t-else="" t-set="next_section" t-value=""/>
+                                                <t t-set="section_no" t-value="section_no+1"/>
+                                                <t t-set="sl_no" t-value="sl_no+1"/>
+                                                <tr>
+                                                    <!--Sl.-->
+                                                    <td class="text-center">
+                                                        <span t-esc="sl_no"/>
+                                                    </td>
+                                                    <!--Work Description-->
+                                                    <td>
+                                                        <span t-esc="section.name"/>
+                                                    </td>
+                                                    <!--Unit-->
+                                                    <td class="text-center">
+                                                        <span t-esc="'Section-%d'%(section_no)"/>
+                                                    </td>
+                                                    <!--Qty-->
+                                                    <td class="text-center">1</td>
+                                                </tr>
+                                                <t t-set="section_idx" t-value="section_idx+1"/>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <table>
+                    <tr>
+                        <td>
+                            <span>**Note: In this offer unit prices are constant, quantity may change as
+                                per design approved by Accord/Alliance. Any omited item, which is not in
+                                this offer but required for completed of full system will be added as
+                                per market price.
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </template>
+    <template id="boq_details_template">
+        <div t-foreach="o.quotation_ids" t-as="quotation" class="row mb-3">
+                                <div class="col-12">
+                                    <div class="row mb-2">
+                                        <div class="col-12 text-center">
+                                            <h3>
+                                                <u>Details of
+                                                    <span t-if="o.project_id" t-field="o.project_id"/>
+                                                    <t t-if="quotation.quotation_type">(
+
+                                                        <span t-field="quotation.quotation_type"/>
+                                                        )
+                                                    </t>
+                                                </u>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <t t-set="sections"
+                                               t-value="[qol for qol in quotation.order_line if qol.display_type=='line_section']"/>
+                                            <t t-set="section_no" t-value="0"/>
+                                            <t t-if="sections">
+                                                <t t-set="next_section" t-value=""/>
+                                                <t t-set="section_idx" t-value="0"/>
+                                                <div t-foreach="sections" t-as="section" class="row pb-3">
+                                                    <t t-if="section_idx &lt; len(sections)-1" t-set="next_section"
+                                                       t-value="sections[section_idx + 1]"/>
+                                                    <t t-else="" t-set="next_section" t-value=""/>
+                                                    <t t-set="section_no" t-value="section_no + 1"/>
+                                                    <div class="col-12">
+                                                        <table>
+                                                            <tr>
+                                                                <th colspan="6">Section:
+                                                                    <span t-esc="section_no"/>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="6" class="text-center">
+                                                                    <span t-if="section.name" t-esc="section.name"/>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>SL.</th>
+                                                                <th class="text-center">Short Description</th>
+                                                                <th class="text-center">Unit</th>
+                                                                <th class="text-center">Qty</th>
+                                                            </tr>
+                                                            <t t-set="sl_no" t-value="0"/>
+                                                            <t t-foreach="quotation.order_line" t-as="ol">
+                                                                <t t-if="ol.sequence > section.sequence and ((next_section and ol.sequence &lt; next_section.sequence) or not next_section)">
+                                                                    <t t-set="sl_no" t-value="sl_no + 1"/>
+                                                                    <tr>
+                                                                        <!--SL.-->
+                                                                        <td>
+                                                                            <span t-esc="sl_no"/>
+                                                                        </td>
+                                                                        <!--Short Description-->
+                                                                        <td>
+                                                                            <span t-field="ol.name"/>
+                                                                            <br/>
+                                                                            <!--                                                                            <span t-field="ol.product_id.description_sale"/>-->
+                                                                        </td>
+                                                                        <!--Unit-->
+                                                                        <td class="text-center">
+                                                                            <span t-field="ol.product_uom"/>
+                                                                        </td>
+                                                                        <!--Qty-->
+                                                                        <td class="text-center">
+                                                                            <span t-field="ol.product_uom_qty"/>
+                                                                        </td>
+                                                                    </tr>
+                                                                </t>
+                                                            </t>
+                                                        </table>
+                                                    </div>
+                                                    <t t-set="section_idx" t-value="section_idx+1"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+    </template>
+    <template id="report_boq">
+        <t t-call="radius_sales_customization.report_layout_header"/>
+        <t t-call="radius_sales_customization.report_layout_footer"/>
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <style>
+                        table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        }
+                        table, th, td {
+                        border: 1px solid;
+                        }
+                    </style>
+                    <t t-if="o and 'company_id' in o">
+                        <t t-set="company" t-value="o.company_id"></t>
+                    </t>
+                    <t t-if="not o or not 'company_id' in o">
+                        <t t-set="company" t-value="res_company"></t>
+                    </t>
+                    <div class="page">
+                        <!--Forwarding Letter-->
+                        <t t-if="o.forwarding_letter">
+                            <t t-call="radius_sales_customization.forwarding_letter_template"/>
+                            <div style="page-break-after: always;"/>
+                        </t>
+                        <!--Terms & Conditions-->
+                        <t t-if="o.terms_and_conditions and o.forwarding_letter">
+                            <t t-call="radius_sales_customization.terms_and_conditions_template"/>
+                            <div style="page-break-after: always;"/>
+                        </t>
+                        <!--Summary-->
+                        <t t-if="o.quotation_ids">
+                            <t t-call="radius_sales_customization.boq_summary_template"/>
+                            <div style="page-break-after: always;"/>
+                        </t>
+                        <!--Details-->
+                        <t t-if="o.quotation_ids">
+                            <t t-call="radius_sales_customization.boq_details_template"/>
+                            <div style="page-break-after: always;"/>
+                        </t>
+                        <!--Terms & Conditions-->
+                        <t t-if="o.terms_and_conditions and not o.forwarding_letter">
+                            <t t-call="radius_sales_customization.terms_and_conditions_template"/>
+                            <div style="page-break-after: always;"/>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

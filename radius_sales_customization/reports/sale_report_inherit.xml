@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_report_inherit" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//h2[@class='mt16']" position="after">
+            <div t-if="doc.boq_id and doc.state not in ['draft','sent']">
+                <h4>BOQ ID:
+                    <span t-esc="doc.boq_id"></span>
+                </h4>
+            </div>
+            <div t-if="doc.quot_id and doc.state in ['draft','sent']">
+                <h4>Quotation ID:
+                    <span t-esc="doc.quot_id"></span>
+                </h4>
+            </div>
+        </xpath>
+    </template>
+</odoo>

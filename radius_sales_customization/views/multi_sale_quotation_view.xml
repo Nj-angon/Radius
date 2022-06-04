@@ -1,0 +1,74 @@
+<odoo>
+    <record id="view_multi_sale_quotation_tree" model="ir.ui.view">
+        <field name="name">multi.sale.quotation.tree</field>
+        <field name="model">multi.sale.quotation</field>
+        <field name="arch" type="xml">
+            <tree string="Multi Sale Quotations">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="project_id"/>
+                <field name="date_order"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_multi_sale_quotation_form" model="ir.ui.view">
+        <field name="name">multi.sale.quotation.form</field>
+        <field name="model">multi.sale.quotation</field>
+        <field name="arch" type="xml">
+            <form string="Multi Sale Quotation">
+                <header>
+                    <button name="action_make_quotation" class="btn-primary" states="boq" type="object" string="Make Quotation"/>
+                    <field name="state" widget="statusbar" statusbar_visible="boq,draft"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="project_id"/>
+                    </group>
+                    <group col="2" colspan="4">
+                        <group>
+                            <field name="partner_id" widget="res_partner_many2one"
+                                   context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"
+                                   options='{"always_reload": True}'/>
+                            <field name="contact_person_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="validity_date"/>
+                            <field name="date_order"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="forwarding_letter" widget="boolean_toggle"/>
+                        <field name="subject"
+                               attrs="{'invisible': [('forwarding_letter', '=', False)], 'required': [('forwarding_letter', '=', True)]}"/>
+                    </group>
+                    <notebook>
+                        <page name="page_quotations" string="Quotations">
+                            <field name="terms_and_conditions" invisible="1"/>
+                            <field name="quotation_ids" domain="[('partner_id', '=', partner_id)]"
+                                   context="{'default_project_id': project_id, 'default_partner_id': partner_id, 'default_date_order': date_order, 'default_validity_date': validity_date}"/>
+                        </page>
+                        <page name="page_dynamic_terms_and_conditions" string="Dynamic Terms and Conditions">
+                            <field name="terms_and_conditions"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="action_multi_sale_quotation_form" model="ir.actions.act_window">
+        <field name="name">Multi Sale Quotation</field>
+        <field name="res_model">multi.sale.quotation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_multi_sale_quotation" name="Multi Sale Quotation" action="action_multi_sale_quotation_form"
+              parent="sale.sale_order_menu" sequence="1"/>
+</odoo>

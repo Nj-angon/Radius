@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+        <record id="paperformat_multi_quotation_report" model="report.paperformat">
+            <field name="name">Multi Quotation Paper Format</field>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">3</field>
+            <field name="margin_bottom">3</field>
+            <field name="margin_left">3</field>
+            <field name="margin_right">3</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">3</field>
+            <field name="dpi">80</field>
+        </record>
+        <record id="action_multi_quotation_report" model="ir.actions.report">
+            <field name="name">Multi Quotation</field>
+            <field name="model">multi.sale.quotation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">radius_sales_customization.report_multi_quotation</field>
+            <field name="report_file">radius_sales_customization.report_multi_quotation</field>
+            <field name="print_report_name">'Quotation - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_multi_sale_quotation"/>
+        </record>
+        <record id="action_boq_report" model="ir.actions.report">
+            <field name="name">Bill of Quantity (BoQ)</field>
+            <field name="model">multi.sale.quotation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">radius_sales_customization.report_boq</field>
+            <field name="report_file">radius_sales_customization.report_boq</field>
+            <field name="print_report_name">'BoQ - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_multi_sale_quotation"/>
+        </record>
+<!--        <field name="paperformat_id" ref="radius_sales_customization.paperformat_multi_quotation_report"/>-->
+    </data>
+</odoo>

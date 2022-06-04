@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="forwarding_letter_template">
+        <div class="row">
+            <div class="col-12">
+                <span>Date:
+                    <span t-esc="o.date_order" t-options='{"widget": "date"}'/>
+                </span>
+                <br/>
+                <span>To,</span>
+                <br/>
+                <span t-if="o.contact_person_id" t-esc="'The %s'%(o.contact_person_id.function)"/>
+                <br/>
+                <span t-field="o.partner_id"/>
+                <br/>
+                <span>
+                    <t t-set="customer_address_params"
+                       t-value="[o.partner_id.street, o.partner_id.city, o.partner_id.state_id.name, o.partner_id.zip, o.partner_id.country_id.name]"/>
+                    <span t-if="customer_address_params"
+                          t-esc="', '.join([cap for cap in customer_address_params if cap])"/>
+                </span>
+                <br/>
+                <p class="mt-4">
+                    <strong>Sub:</strong>
+                    <span t-if="o.subject" t-field="o.subject"/>
+                </p>
+                <p class="mb-4">
+                    <strong>Ref: QUOTE:</strong>
+                    <span t-field="o.name"/>
+                </p>
+                <span>Dear Sir,</span>
+                <br/>
+                <p>
+                    We would like to introduce ourselves as a business concern that, Radius
+                    Engineering
+                    established in 2013 &amp; started its business with a promising goal to fulfill
+                    and
+                    satisfy the ultimate need of customers in the power and communication arena of
+                    Bangladesh. Amongst the mid ranked Fire Safety companies /dealer in Bangladesh,
+                    Radius Engineering and its associates is operating dominantly in the
+                    high-technology
+                    core sectors of the economy, such as Firefighting and safety security arena.
+                    This
+                    company also responsible for preparation of fire consultancy, products selection
+                    and
+                    system designing, installation, testing and commissioning of various turn- key
+                    projects related to above.Radius Engineering is strongly market driven company
+                    with
+                    a high customer orientation. This trends are accentuated by a wide spread
+                    marketing
+                    and service network across the country. Radius Engineering has put its
+                    nationwide
+                    experience and technological expertise in the areas of specific technical
+                    requirement of our customers around the country.
+                </p>
+                <p>
+                    Having extensive technical know how gained through years of experience, Radius
+                    Engineering are strongly capable to offering a constant stream of optimum new
+                    solution tailored to our current technical requirement. Over the years, we have
+                    built up a vast store of specialist / expertise, which provides a springboard
+                    for
+                    further product development, allowing us to anticipate and fulfill our
+                    customer’s
+                    specific needs.
+                </p>
+                <br/>
+                <span style="margin-top: 30mm;">Thanking you with best regards</span>
+                <br/>
+                <span>
+                    <strong>
+                        <span t-esc="user.name"/>
+                    </strong>
+                </span>
+                <br/>
+                <t t-if="user.function">
+                    <span t-esc="user.function"/>
+                    <br/>
+                </t>
+                <span>
+                    <strong>
+                        <span t-esc="company.name"/>
+                    </strong>
+                </span>
+                <br/>
+                <span>
+                    <u>Cell:
+                        <span t-if="company.phone" t-esc="company.phone"/>
+                    </u>
+                </span>
+                <br/>
+                <span>
+                    <u>Email:
+                        <span t-if="company.email" t-esc="company.email"/>
+                    </u>
+                </span>
+                <br/>
+                <span>
+                    <u>Web:
+                        <span t-if="company.website" t-esc="company.website"/>
+                    </u>
+                </span>
+            </div>
+        </div>
+    </template>
+</odoo>

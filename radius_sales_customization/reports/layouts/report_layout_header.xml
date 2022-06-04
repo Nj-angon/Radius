@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_layout_header">
+        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id"></t>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"></t>
+        </t>
+        <div class="header">
+            <div class="row border-bottom border-dark mb-3 pb-3">
+                <div class="col-4">
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)"
+                         style="max-height: 50px;"/>
+                </div>
+                <div class="col-8 text-right">
+                    <h5 t-field="company.partner_id"/>
+                    <span t-esc="', '.join([i for i in [company.street, company.city, company.state_id.name, company.zip, company.country_id.name] if i])"/>
+                    <br/>
+                    Hotline:
+                    <span t-field="company.phone"/>
+                    <br/>
+                    Email:
+                    <span t-field="company.email"/>
+                    <br/>
+                    Website:
+                    <span t-field="company.website"/>
+                    <br/>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>
