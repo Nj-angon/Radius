@@ -8,8 +8,11 @@ class MultiSaleQuotation(models.Model):
 
     STATES = [
         ('boq', 'Bill of Quantity'),
-        ('draft', 'Quotation')
+        ('draft', 'Quotation'),
+        ('sale', 'Sales Order')
     ]
+    boq_id = fields.Char(string="BOQ ID")
+    quot_id = fields.Char(string="Quotation ID", states={'draft': [('readonly', False)], 'draft': [('readonly', False)],                                           'sent': [('readonly', False)]})
     name = fields.Char('Reference', compute='_compute_name')
     # project_name = fields.Char('Project')
     project_id = fields.Many2one('project.project', string='Project')
@@ -34,6 +37,13 @@ class MultiSaleQuotation(models.Model):
                 'state': 'draft'
             })
         self.state = 'draft'
+
+    def action_sales_order(self):
+        if self.quotation_ids:
+            self.quotation_ids.write({
+                'state': 'sale'
+            })
+        self.state = 'sale'
 
 
 

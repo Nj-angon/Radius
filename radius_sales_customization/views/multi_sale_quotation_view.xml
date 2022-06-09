@@ -1,4 +1,17 @@
 <odoo>
+    <record id="view_sales_order_filter_inherit" model="ir.ui.view">
+        <field name="name">multi.sale.quotation.search.inherit</field>
+        <field name="model">multi.sale.quotation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="boq_id" string="BOQ"/>
+                <field name="quot_id" string="QUO"/>
+                <filter name="filter_boq" string="Bill of Quantity" domain="[('state', '=', 'boq')]"/>
+                <filter name="filter_quot" string="Quotation" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_sales" string="Sales Order" domain="[('state', '=', 'sale')]"/>
+            </search>
+        </field>
+    </record>
     <record id="view_multi_sale_quotation_tree" model="ir.ui.view">
         <field name="name">multi.sale.quotation.tree</field>
         <field name="model">multi.sale.quotation</field>
@@ -9,6 +22,8 @@
                 <field name="project_id"/>
                 <field name="date_order"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'"/>
+                <field name="boq_id"/>
+                <field name="quot_id"/>
             </tree>
         </field>
     </record>
@@ -18,12 +33,21 @@
         <field name="arch" type="xml">
             <form string="Multi Sale Quotation">
                 <header>
-                    <button name="action_make_quotation" class="btn-primary" states="boq" type="object" string="Make Quotation"/>
-                    <field name="state" widget="statusbar" statusbar_visible="boq,draft"/>
+                    <button name="action_make_quotation" class="btn-primary" states="boq" type="object"
+                            string="Make Quotation"/>
+                    <button name="action_sales_order" class="btn-primary" states="draft" type="object"
+                            string="Confirm"/>
+                    <field name="state" widget="statusbar" statusbar_visible="boq,draft,sale"/>
                 </header>
                 <sheet>
                     <group>
                         <field name="name"/>
+                    </group>
+                    <group col="2" colspan="4">
+                        <group>
+                            <field name="boq_id" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            <field name="quot_id" attrs="{'invisible': [('state', '=', 'boq')]}"/>
+                        </group>
                     </group>
                     <group>
                         <field name="project_id"/>
@@ -69,6 +93,12 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_multi_sale_quotation" name="Multi Sale Quotation" action="action_multi_sale_quotation_form"
+    <menuitem id="menu_multi_sale_quotation" name="Radius(Quotation)" action="action_multi_sale_quotation_form"
               parent="sale.sale_order_menu" sequence="1"/>
+    <!--    <menuitem id="sale.menu_sale_quotations" parent="sale.sale_order_menu" sequence="1" groups="hide"/>-->
+    <!--    <delete model="ir.ui.menu" id="sale.menu_sale_quotations"/>-->
+    <record model="ir.ui.menu" id="sale.menu_sale_quotations">
+        <field name="action" eval="False"/>
+    </record>
+
 </odoo>

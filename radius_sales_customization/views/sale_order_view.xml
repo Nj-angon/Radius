@@ -1,28 +1,28 @@
 <odoo>
-    <record id="view_sales_order_filter_inherit" model="ir.ui.view">
-        <field name="name">sale.order.search.inherit</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="//search" position="inside">
-                <field name="boq_id" string="BOQ"/>
-                <field name="quot_id" string="QUO"/>
-            </xpath>
-        </field>
-    </record>
-    <record id="view_order_tree_inherit" model="ir.ui.view">
-        <field name="name">sale.order.tree</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
-        <field name="arch" type="xml">
-            <xpath expr="/tree/field[@name='state']" position="after">
-                <field name="boq_id"/>
-            </xpath>
-             <xpath expr="/tree/field[@name='boq_id']" position="after">
-                <field name="quot_id"/>
-            </xpath>
-        </field>
-    </record>
+<!--    <record id="view_sales_order_filter_inherit" model="ir.ui.view">-->
+<!--        <field name="name">sale.order.search.inherit</field>-->
+<!--        <field name="model">sale.order</field>-->
+<!--        <field name="inherit_id" ref="sale.view_sales_order_filter"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//search" position="inside">-->
+<!--                <field name="boq_id" string="BOQ"/>-->
+<!--                <field name="quot_id" string="QUO"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+<!--    <record id="view_order_tree_inherit" model="ir.ui.view">-->
+<!--        <field name="name">sale.order.tree</field>-->
+<!--        <field name="model">sale.order</field>-->
+<!--        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="/tree/field[@name='state']" position="after">-->
+<!--                <field name="boq_id"/>-->
+<!--            </xpath>-->
+<!--             <xpath expr="/tree/field[@name='boq_id']" position="after">-->
+<!--                <field name="quot_id"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
     <record id="view_order_form_inherited" model="ir.ui.view">
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
@@ -38,12 +38,12 @@
             <xpath expr="//field[@name='partner_id']" position="before">
                 <field name="project_id"/>
             </xpath>
-            <xpath expr="//field[@name='project_id']" position="before">
-                <field name="boq_id" attrs="{'invisible': [('state', '=', 'draft')]}"/>
-            </xpath>
-            <xpath expr="//field[@name='project_id']" position="before">
-                <field name="quot_id" attrs="{'invisible': [('state', '=', 'boq')]}"/>
-            </xpath>
+<!--            <xpath expr="//field[@name='project_id']" position="before">-->
+<!--                <field name="boq_id" attrs="{'invisible': [('state', '=', 'draft')]}"/>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='project_id']" position="before">-->
+<!--                <field name="quot_id" attrs="{'invisible': [('state', '=', 'boq')]}"/>-->
+<!--            </xpath>-->
             <xpath expr="//group[@name='order_details']" position="inside">
                 <field name="quotation_type"/>
             </xpath>

@@ -12,8 +12,6 @@ class SaleOrder(models.Model):
         ('done', 'Locked'),
         ('cancel', 'Cancelled'),
     ], string='Status', readonly=True, copy=False, index=True, tracking=3, default='boq')
-    boq_id = fields.Char(string="BOQ ID")
-    quot_id = fields.Char(string="Quotation ID", states={'draft': [('readonly', False)], 'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     partner_id = fields.Many2one(
         'res.partner', string='Customer', readonly=True,
         states={'boq': [('readonly', False)], 'draft': [('readonly', False)], 'sent': [('readonly', False)]},
